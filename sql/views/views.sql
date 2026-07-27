@@ -1,7 +1,12 @@
 
 -- Views
 
+
 USE inventory_order;
+
+DROP VIEW IF EXISTS order_summary;
+DROP VIEW IF EXISTS low_stock;
+DROP VIEW IF EXISTS customer_spending;
 
 -- 1. Order summary: who ordered, when, how much, how many items
 
@@ -11,7 +16,7 @@ SELECT
     c.customer_name,
     o.order_date,
     o.total_amount,
-    COUNT(od.order_detail_id) AS number_of_products,
+    COUNT(od.order_detail_id)   AS number_of_products,
     IFNULL(SUM(od.quantity), 0) AS total_items
 FROM orders o
 JOIN customers c ON o.customer_id = c.customer_id
@@ -42,8 +47,8 @@ CREATE VIEW customer_spending AS
 SELECT
     c.customer_id,
     c.customer_name,
-    COUNT(o.order_id) AS total_orders,
-    IFNULL(SUM(o.total_amount), 0) AS total_spent,
+    COUNT(o.order_id)                 AS total_orders,
+    IFNULL(SUM(o.total_amount), 0)    AS total_spent,
     CASE
         WHEN IFNULL(SUM(o.total_amount), 0) >= 5000 THEN 'Gold'
         WHEN IFNULL(SUM(o.total_amount), 0) >= 1000 THEN 'Silver'
