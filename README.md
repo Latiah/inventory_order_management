@@ -9,7 +9,7 @@ spending tiers and stock replenishment.
 ---
 
 ```bash
-mysql -u root -p < setup_pipeline.sql
+mysql -u root -p < src/setup_pipeline.sql
 ```
 
 ## The five tables
@@ -39,22 +39,8 @@ Insert one row into `order_details` and five triggers handle the rest:
 
 ---
 
-## Commands
 
-```sql
--- Order with one product: customer 1 buys 3 of product 5
-CALL place_order(1, 5, 3);
-
--- Order with several products
-CALL start_order(2);        -- returns a new order_id, e.g. 9
-CALL add_item(9, 1, 2);     -- 2 of product 1
-CALL add_item(9, 7, 5);     -- 5 of product 7
-
--- Restocking
-CALL restock_product(5, 50);      -- add 50 to product 5
-CALL restock_all_low_stock();     -- top up everything that is low
 ```
-
 Ordering more than there is in stock creates nothing and returns a message:
 
 ```
