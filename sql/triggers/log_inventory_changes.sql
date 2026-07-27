@@ -2,7 +2,7 @@
 --  Triggers
 
 
-USE inventory_db;
+USE inventory_order;
 
 DELIMITER $$
 
@@ -47,6 +47,8 @@ BEGIN
         NEW.quantity * NEW.unit_price * (1 - NEW.discount_pct / 100), 2);
 END $$
 
+
+--  LOG INVENTORY - record the stock change in the log. 
 
 CREATE TRIGGER after_order_detail_insert
 AFTER INSERT ON order_details
