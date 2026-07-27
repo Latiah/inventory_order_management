@@ -39,20 +39,6 @@ Insert one row into `order_details` and five triggers handle the rest:
 
 ---
 
-
-```
-Ordering more than there is in stock creates nothing and returns a message:
-
-```
-+------------------------------------+---------------+---------+
-| message                            | you_asked_for | we_have |
-+------------------------------------+---------------+---------+
-| Not enough stock - order cancelled |           999 |       3 |
-+------------------------------------+---------------+---------+
-```
-
----
-
 ## The views
 
 ```sql
