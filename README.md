@@ -82,12 +82,6 @@ Applied automatically by  one of the triggers in the`triggers.sql` file:
 
 ---
 
-## Run tests
-
-```bash
-mysql -u root -p < tests/run_tests.sql
-```
-
 ## Known limits
 
 - No order cancellation or returns
