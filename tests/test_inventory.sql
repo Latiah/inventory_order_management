@@ -5,16 +5,6 @@
 
 USE inventory_order;
 
-SELECT
-    'Data is fresh (no restock has run yet)' AS test_name,
-    (SELECT COUNT(*) FROM inventory_logs WHERE reason = 'Auto restock') AS restocks_found,
-    0 AS expected,
-    CASE WHEN (SELECT COUNT(*) FROM inventory_logs WHERE reason = 'Auto restock') = 0
-         THEN 'PASS'
-         ELSE 'STOP - re-run setup_all.sql first, then run this file again'
-    END AS result;
-
-
 -- TEST 1: Stock went down by the right amount.
 -- Laptop started at 40. Order 1 took 1, order 7 took 12.
 -- 40 - 13 = 27

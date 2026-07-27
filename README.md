@@ -8,23 +8,9 @@ spending tiers and stock replenishment.
 
 ---
 
-## Quick start
-
 ```bash
-mysql -u root -p < setup_all.sql
+mysql -u root -p < setup_pipeline.sql
 ```
-
-That builds everything and loads sample data. Then open
-`sql/queries/08_queries.sql` and start running reports.
-
----
-
-
-**The numbers are the run order.** The schema has to exist before the triggers,
-the triggers before the sample data, and so on. `setup_all.sql` does 01–07 for
-you.
-
----
 
 ## The five tables
 
@@ -36,7 +22,7 @@ you.
 | `order_details` | one row per product in an order |
 | `inventory_logs` | every stock change that has ever happened |
 
-Diagram: `diagrams/erd.mmd`
+Diagram: `diagrams/inventory.png`
 
 ---
 
@@ -99,7 +85,7 @@ SELECT * FROM customer_spending WHERE tier = 'Gold';
 
 ## Bulk discounts
 
-Applied automatically by `02_pricing_triggers.sql`:
+Applied automatically by  one of the triggers in the`triggers.sql` file:
 
 | Quantity | Discount |
 |---|---|
@@ -110,23 +96,11 @@ Applied automatically by `02_pricing_triggers.sql`:
 
 ---
 
-## Tests
-
-25 tests across three files. The first two print PASS/FAIL:
+## Run tests
 
 ```bash
-mysql -u root -p inventory_order < sql/tests/test_order_flow.sql
-mysql -u root -p inventory_order < sql/tests/test_inventory.sql
-mysql -u root -p --force inventory_order < sql/tests/test_constraints.sql
+mysql -u root -p < tests/run_tests.sql
 ```
-
-`test_constraints.sql` is inverted — every statement in it is *meant* to fail,
-so an error means the test passed. It needs `--force` because MySQL otherwise
-stops at the first error.
-
-Re-run `setup_all.sql` before testing if you've been experimenting.
-
----
 
 ## Known limits
 

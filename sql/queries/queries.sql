@@ -117,7 +117,7 @@ GROUP BY p.product_id, p.product_name, p.stock_quantity
 HAVING p.stock_quantity <> IFNULL(SUM(l.change_qty), 0);
 
 
--- 13. Rank customers using a window function
+-- 13. Rank customers 
 
 SELECT
     customer_name,
