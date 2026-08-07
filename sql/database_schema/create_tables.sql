@@ -10,8 +10,9 @@ USE inventory_order;
 CREATE TABLE customers (
     customer_id    INT AUTO_INCREMENT PRIMARY KEY,
     customer_name  VARCHAR(100) NOT NULL,
-    email          VARCHAR(100) NOT NULL,
-    phone          VARCHAR(20)
+    email          VARCHAR(100) NOT NULL UNIQUE,
+    phone          VARCHAR(20),
+    UNIQUE KEY uq_customers_email (email)
 );
 
 
@@ -28,7 +29,10 @@ CREATE TABLE products (
     price           DECIMAL(10,2) NOT NULL,
     stock_quantity  INT UNSIGNED NOT NULL DEFAULT 0,
     reorder_level   INT NOT NULL DEFAULT 0,
-    reorder_qty     INT NOT NULL DEFAULT 0
+    reorder_qty     INT NOT NULL DEFAULT 0,
+    CONSTRAINT chk_products_price         CHECK (price >= 0),
+    CONSTRAINT chk_products_reorder_level CHECK (reorder_level >= 0),
+    CONSTRAINT chk_products_reorder_qty   CHECK (reorder_qty >= 0)
 );
 
 
@@ -39,7 +43,8 @@ CREATE TABLE orders (
     customer_id   INT NOT NULL,
     order_date    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     total_amount  DECIMAL(10,2) NOT NULL DEFAULT 0,
-    FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
+    FOREIGN KEY (customer_id) REFERENCES customers(customer_id),
+    CONSTRAINT chk_orders_total_amount CHECK (total_amount >= 0)
 );
 
 
@@ -57,7 +62,9 @@ CREATE TABLE order_details (
     line_total       DECIMAL(10,2) NOT NULL DEFAULT 0,
     UNIQUE KEY uq_order_product (order_id, product_id),
     FOREIGN KEY (order_id)   REFERENCES orders(order_id),
-    FOREIGN KEY (product_id) REFERENCES products(product_id)
+    FOREIGN KEY (product_id) REFERENCES products(product_id),
+    CONSTRAINT chk_order_details_quantity   CHECK (quantity > 0),
+    CONSTRAINT chk_order_details_unit_price CHECK (unit_price >= 0)
 );
 
 
@@ -68,8 +75,10 @@ CREATE TABLE inventory_logs (
     product_id  INT NOT NULL,
     change_qty  INT NOT NULL,
     reason      VARCHAR(50) NOT NULL,
+    running_balance  INT UNSIGNED NOT NULL,
     changed_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (product_id) REFERENCES products(product_id)
+    FOREIGN KEY (product_id) REFERENCES products(product_id),
+    CONSTRAINT chk_inventory_logs_change_qty CHECK (change_qty <> 0)
 );
 
 
