@@ -5,4 +5,4 @@
 - orders: order headers.
 - order_details: products and quantities per order.
 - inventory_logs: audit history of stock changes.
-- Views: order_summary, low_stock_products, customer_spending.
+- Views: order_summary, low_stock, customer_spending.

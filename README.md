@@ -22,7 +22,7 @@ mysql -u root -p < src/setup_pipeline.sql
 | `order_details` | one row per product in an order |
 | `inventory_logs` | every stock change that has ever happened |
 
-Diagram: `diagrams/inventory_erd.png`
+Diagram: `diagrams/inventory_order_erd.png`
 
 ---
 
@@ -67,10 +67,3 @@ Applied automatically by  one of the triggers in the`triggers.sql` file:
 | 100+ | 15% |
 
 ---
-
-## Known limits
-
-- No order cancellation or returns
-- Discount bands are hardcoded in the trigger rather than in a reference table
-- No handling for two people buying the last item simultaneously (the
-  `INT UNSIGNED` column still prevents negative stock)

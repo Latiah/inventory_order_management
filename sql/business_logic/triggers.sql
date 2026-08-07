@@ -5,9 +5,6 @@ USE inventory_order;
 
 DROP TRIGGER IF EXISTS after_product_insert;
 DROP TRIGGER IF EXISTS before_order_detail_insert;
-DROP TRIGGER IF EXISTS after_order_detail_log_inventory;
-DROP TRIGGER IF EXISTS after_order_detail_update_stock;
-DROP TRIGGER IF EXISTS after_order_detail_update_total;
 
 DELIMITER $$
 
@@ -24,14 +21,7 @@ BEGIN
     END IF;
 END $$
 
--- Stamp today's product price onto the order line before it's inserted.
--- This is a genuine snapshot (products.price can change later and we
--- must keep what the customer was actually charged), so it stays a
--- trigger rather than becoming a generated column, which cannot read
--- another table. discount_pct and line_total no longer need to be set
--- here - they are GENERATED columns on order_details now (see
--- create_tables.sql) and are computed by the engine from quantity and
--- the unit_price set below.
+
 
 CREATE TRIGGER before_order_detail_insert
 BEFORE INSERT ON order_details
