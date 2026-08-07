@@ -22,7 +22,7 @@ mysql -u root -p < src/setup_pipeline.sql
 | `order_details` | one row per product in an order |
 | `inventory_logs` | every stock change that has ever happened |
 
-Diagram: `diagrams/inventory.png`
+Diagram: `diagrams/inventory_erd.png`
 
 ---
 

@@ -58,8 +58,20 @@ CREATE TABLE order_details (
     product_id       INT NOT NULL,
     quantity         INT NOT NULL,
     unit_price       DECIMAL(10,2) NOT NULL DEFAULT 0,
-    discount_pct     DECIMAL(5,2)  NOT NULL DEFAULT 0,
-    line_total       DECIMAL(10,2) NOT NULL DEFAULT 0,
+    discount_pct     DECIMAL(5,2) GENERATED ALWAYS AS (
+                          CASE
+                              WHEN quantity >= 100 THEN 15
+                              WHEN quantity >= 50  THEN 10
+                              WHEN quantity >= 25  THEN 5
+                              WHEN quantity >= 10  THEN 2.5
+                              ELSE 0
+                          END
+                      ) STORED,
+
+    -- Line total after discount, rounded to 2 decimal places.
+    line_total       DECIMAL(10,2) GENERATED ALWAYS AS (
+                          ROUND(quantity * unit_price * (1 - discount_pct / 100), 2)
+                      ) STORED,
     UNIQUE KEY uq_order_product (order_id, product_id),
     FOREIGN KEY (order_id)   REFERENCES orders(order_id),
     FOREIGN KEY (product_id) REFERENCES products(product_id),
@@ -74,7 +86,7 @@ CREATE TABLE inventory_logs (
     log_id      INT AUTO_INCREMENT PRIMARY KEY,
     product_id  INT NOT NULL,
     change_qty  INT NOT NULL,
-    reason      VARCHAR(50) NOT NULL,
+    reason           ENUM('Opening stock', 'Order placed', 'Manual restock', 'Auto restock') NOT NULL,
     running_balance  INT UNSIGNED NOT NULL,
     changed_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (product_id) REFERENCES products(product_id),

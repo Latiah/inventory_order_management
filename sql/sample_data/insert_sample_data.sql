@@ -1,7 +1,6 @@
 
 -- Sample data
 
-
 USE inventory_order;
 
 INSERT INTO customers (customer_name, email, phone) VALUES
@@ -46,13 +45,17 @@ CALL place_order(6, 13, 10);   -- 10 reams,      2.5% discount
 -- One order with THREE different products.
 -- Order 7 is created first, then items are added to it.
 
-CALL start_order(1);
-CALL add_item(7, 1, 12);       -- 12 laptops,   2.5% discount
-CALL add_item(7, 8, 10);       -- 10 chairs,    2.5% discount
-CALL add_item(7, 9, 2);        -- 2 desks,        no discount
+CALL place_order_multi(1, JSON_ARRAY(
+    JSON_OBJECT('product_id', 1, 'quantity', 12),   -- 12 laptops,  2.5% discount
+    JSON_OBJECT('product_id', 8, 'quantity', 10),   -- 10 chairs,   2.5% discount
+    JSON_OBJECT('product_id', 9, 'quantity', 2)     -- 2 desks,     no discount
+));
 
 -- Another multi-product order
 
-CALL start_order(2);
-CALL add_item(8, 3, 55);       -- 55 keyboards,  10% discount
-CALL add_item(8, 4, 5);        -- 5 mice,         no discount
+CALL place_order_multi(2, JSON_ARRAY(
+    JSON_OBJECT('product_id', 3, 'quantity', 55),   -- 55 keyboards, 10% discount
+    JSON_OBJECT('product_id', 4, 'quantity', 5)     -- 5 mice,       no discount
+));
+
+
